@@ -21,9 +21,6 @@ async def fetch_data(db: AsyncSession):
     game_session_result = await db.execute(select(GameSession))
     game_sessions = game_session_result.scalars().all()
 
-    # review_result = await db.execute(select(Review))
-    # reviews = review_result.scalars().all()
-
     playlist_session_result = await db.execute(select(PlaylistSession))
     playlist_sessions = playlist_session_result.scalars().all()
 
@@ -35,9 +32,17 @@ async def fetch_data(db: AsyncSession):
     favorite_df = pd.DataFrame([favorite.__dict__ for favorite in favorites])
     follow_df = pd.DataFrame([follow.__dict__ for follow in follows])
     game_session_df = pd.DataFrame([game_session.__dict__ for game_session in game_sessions])
-    # review_df = pd.DataFrame([review.__dict__ for review in reviews])
     playlist_session_df = pd.DataFrame([session.__dict__ for session in playlist_sessions])
     playlist_user_activity_df = pd.DataFrame([activity.__dict__ for activity in playlist_user_activities])
+
+    # Drop the SQLAlchemy state from each DataFrame
+    activity_df = activity_df.drop(columns=['_sa_instance_state'], errors='ignore')
+    comment_df = comment_df.drop(columns=['_sa_instance_state'], errors='ignore')
+    favorite_df = favorite_df.drop(columns=['_sa_instance_state'], errors='ignore')
+    follow_df = follow_df.drop(columns=['_sa_instance_state'], errors='ignore')
+    game_session_df = game_session_df.drop(columns=['_sa_instance_state'], errors='ignore')
+    playlist_session_df = playlist_session_df.drop(columns=['_sa_instance_state'], errors='ignore')
+    playlist_user_activity_df = playlist_user_activity_df.drop(columns=['_sa_instance_state'], errors='ignore')
 
     return {
         "activity": activity_df,
@@ -45,7 +50,6 @@ async def fetch_data(db: AsyncSession):
         "favorite": favorite_df,
         "follow": follow_df,
         "game_session": game_session_df,
-        # "review": review_df,
         "playlist_session": playlist_session_df,
         "playlist_user_activity": playlist_user_activity_df
     }

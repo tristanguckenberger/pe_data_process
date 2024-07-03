@@ -11,6 +11,7 @@ from celery_config import make_celery
 from recommendation import fetch_recommendations
 from data_processing import fetch_data, normalize, svd_reconstruct
 from fastapi.encoders import jsonable_encoder
+from recommendation import fetch_recommendations_for_all_users
 
 def convert_numpy_types(obj):
     if isinstance(obj, np.generic):
